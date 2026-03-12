@@ -10,6 +10,7 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
+    "noEmit": true,
     "types": ["vitest/globals", "node"]
   },
   "include": ["extensions/**/*.ts", "src/**/*.ts", "test/**/*.ts"]

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+Bug fix release.
+
+### Fixed
+- Added `noEmit: true` to tsconfig.json to resolve TypeScript error with `allowImportingTsExtensions`
+
 ## 0.1.0
 
 Initial release.

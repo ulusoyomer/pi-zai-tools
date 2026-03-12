@@ -1,6 +1,6 @@
 {
   "name": "pi-zai-tools",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pi package that exposes Z.AI Web Search, Web Reader, and Zread MCP tools.",
   "type": "module",
   "keywords": ["pi-package", "pi", "zai", "mcp", "search", "reader", "zread"],

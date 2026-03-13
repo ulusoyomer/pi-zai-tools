@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2
+
+Metadata update release.
+
+### Added
+- Added `repository`, `homepage`, and `bugs` metadata to `package.json`
+
 ## 0.1.1
 
 Bug fix release.

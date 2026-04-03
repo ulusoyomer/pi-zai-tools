@@ -6,7 +6,7 @@ describe('loadConfig', () => {
     const config = loadConfig({ ZAI_API_KEY: 'test-key' });
 
     expect(config.apiKey).toBe('test-key');
-    expect(config.enabledModules).toEqual(['search', 'reader', 'zread']);
+    expect(config.enabledModules).toEqual(['search', 'reader', 'zread', 'vision']);
     expect(config.baseUrl).toBe('https://api.z.ai');
     expect(config.timeoutMs).toBe(30_000);
   });

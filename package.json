@@ -1,9 +1,9 @@
 {
   "name": "pi-zai-tools",
-  "version": "0.1.2",
-  "description": "Pi package that exposes Z.AI Web Search, Web Reader, and Zread MCP tools.",
+  "version": "0.2.0",
+  "description": "Pi package that exposes Z.AI Web Search, Web Reader, Zread, and Vision MCP tools.",
   "type": "module",
-  "keywords": ["pi-package", "pi", "zai", "mcp", "search", "reader", "zread"],
+  "keywords": ["pi-package", "pi", "zai", "mcp", "search", "reader", "zread", "vision"],
   "license": "MIT",
   "repository": {
     "type": "git",

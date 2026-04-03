@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.2.0
+
+Feature release — adds AI-powered image and video analysis via Z.AI Vision MCP.
+
+### Added
+- `vision` module with stdio-based MCP client (`src/client/stdio-mcp.ts`)
+- `zai_vision_ui_to_artifact` — turn UI screenshots into code, prompts, specs, or descriptions
+- `zai_vision_extract_text` — OCR screenshots for code, terminals, docs, and general text
+- `zai_vision_diagnose_error` — analyze error snapshots and propose actionable fixes
+- `zai_vision_understand_diagram` — interpret architecture, flow, UML, ER, and system diagrams
+- `zai_vision_analyze_data_viz` — read charts and dashboards to surface insights and trends
+- `zai_vision_ui_diff_check` — compare two UI shots to flag visual or implementation drift
+- `zai_vision_analyze_image` — general-purpose image understanding when other tools don't fit
+- `zai_vision_analyze_video` — inspect videos (local/remote ≤8 MB; MP4/MOV/M4V)
+- `McpCallerWithCleanup` type in `src/types.ts`
+- `extractVisionText` helper in `src/services/vision.ts`
+- unit tests for vision service (15 tests) and extension registration (2 new tests)
+
+### Changed
+- `ENABLED_MODULES` now includes `vision` by default
+- `examples.env` updated to list `vision` in module options
+- `README.md` updated with vision tools, parameters, and usage examples
+- `package.json` description and keywords updated to include vision
+
 ## 0.1.2
 
 Metadata update release.

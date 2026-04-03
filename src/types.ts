@@ -31,6 +31,10 @@ export interface McpCaller {
   callTool: (toolName: string, args: Record<string, unknown>) => Promise<McpToolResult>;
 }
 
+export interface McpCallerWithCleanup extends McpCaller {
+  close: () => Promise<void>;
+}
+
 export interface FormattedToolResult {
   summary: string;
   details: Record<string, unknown>;

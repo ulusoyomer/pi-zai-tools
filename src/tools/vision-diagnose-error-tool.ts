@@ -25,10 +25,18 @@ export function createVisionDiagnoseErrorTool(service: {
     async execute(
       _toolCallId: string,
       params: { image_source: string; prompt: string; context?: string },
+      _signal?: unknown,
+      onUpdate?: (update: { content: Array<{ type: "text"; text: string }>; details: unknown }) => void,
     ) {
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `🔧 Vision — diagnosing error from screenshot...` }], details: undefined });
+      }
       const result = await service.diagnoseError(params.image_source, params.prompt, params.context);
       const text = extractVisionText(result as import('../types.ts').McpToolResult);
       const truncated = truncateText(text, { maxChars: 12_000, label: 'error diagnosis' });
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `✅ Vision — error diagnosis complete` }], details: undefined });
+      }
       return {
         content: [{ type: 'text' as const, text: truncated.text }],
         details: { raw: result, truncated: truncated.truncated },

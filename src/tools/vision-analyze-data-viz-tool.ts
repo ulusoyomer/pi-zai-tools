@@ -25,10 +25,19 @@ export function createVisionAnalyzeDataVizTool(service: {
     async execute(
       _toolCallId: string,
       params: { image_source: string; prompt: string; analysis_focus?: string },
+      _signal?: unknown,
+      onUpdate?: (update: { content: Array<{ type: "text"; text: string }>; details: unknown }) => void,
     ) {
+      const focusHint = params.analysis_focus ? ` — focus: ${params.analysis_focus}` : '';
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `📈 Vision — analyzing data visualization${focusHint}...` }], details: undefined });
+      }
       const result = await service.analyzeDataViz(params.image_source, params.prompt, params.analysis_focus);
       const text = extractVisionText(result as import('../types.ts').McpToolResult);
       const truncated = truncateText(text, { maxChars: 12_000, label: 'data viz analysis' });
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `✅ Vision — data visualization analysis complete` }], details: undefined });
+      }
       return {
         content: [{ type: 'text' as const, text: truncated.text }],
         details: { raw: result, truncated: truncated.truncated },

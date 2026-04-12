@@ -23,10 +23,19 @@ export function createVisionExtractTextTool(service: {
     async execute(
       _toolCallId: string,
       params: { image_source: string; prompt: string; programming_language?: string },
+      _signal?: unknown,
+      onUpdate?: (update: { content: Array<{ type: "text"; text: string }>; details: unknown }) => void,
     ) {
+      const langHint = params.programming_language ? ` (${params.programming_language})` : '';
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `📝 Vision — extracting text from image${langHint}...` }], details: undefined });
+      }
       const result = await service.extractText(params.image_source, params.prompt, params.programming_language);
       const text = extractVisionText(result as import('../types.ts').McpToolResult);
       const truncated = truncateText(text, { maxChars: 12_000, label: 'extracted text' });
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `✅ Vision — text extracted successfully${langHint}` }], details: undefined });
+      }
       return {
         content: [{ type: 'text' as const, text: truncated.text }],
         details: { raw: result, truncated: truncated.truncated },

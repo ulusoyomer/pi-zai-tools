@@ -23,10 +23,19 @@ export function createVisionUnderstandDiagramTool(service: {
     async execute(
       _toolCallId: string,
       params: { image_source: string; prompt: string; diagram_type?: string },
+      _signal?: unknown,
+      onUpdate?: (update: { content: Array<{ type: "text"; text: string }>; details: unknown }) => void,
     ) {
+      const typeHint = params.diagram_type ? ` (${params.diagram_type})` : '';
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `📊 Vision — analyzing diagram${typeHint}...` }], details: undefined });
+      }
       const result = await service.understandDiagram(params.image_source, params.prompt, params.diagram_type);
       const text = extractVisionText(result as import('../types.ts').McpToolResult);
       const truncated = truncateText(text, { maxChars: 12_000, label: 'diagram analysis' });
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `✅ Vision — diagram analysis complete${typeHint}` }], details: undefined });
+      }
       return {
         content: [{ type: 'text' as const, text: truncated.text }],
         details: { raw: result, truncated: truncated.truncated },

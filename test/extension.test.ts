@@ -1,82 +1,63 @@
 import { describe, expect, it, vi } from 'vitest';
 import extension from '../extensions/zai-tools.ts';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+function createMockPi() {
+  return {
+    registerTool: vi.fn(),
+    exec: vi.fn(),
+    on: vi.fn(),
+    registerCommand: vi.fn(),
+    registerShortcut: vi.fn(),
+    registerFlag: vi.fn(),
+    getFlag: vi.fn(),
+    sendMessage: vi.fn(),
+    sendUserMessage: vi.fn(),
+    appendEntry: vi.fn(),
+    setSessionName: vi.fn(),
+    getSessionName: vi.fn(),
+    setLabel: vi.fn(),
+    getCommands: vi.fn(() => []),
+    registerMessageRenderer: vi.fn(),
+    getActiveTools: vi.fn(() => []),
+    getAllTools: vi.fn(() => []),
+    setActiveTools: vi.fn(),
+    setModel: vi.fn(),
+    getThinkingLevel: vi.fn(),
+    setThinkingLevel: vi.fn(),
+    events: { on: vi.fn(), emit: vi.fn() },
+    registerProvider: vi.fn(),
+    unregisterProvider: vi.fn(),
+  } as any;
+}
+
 describe('zai tools extension', () => {
   it('registers only enabled module tools', () => {
-    const registerTool = vi.fn();
+    const pi = createMockPi();
 
-    extension({
-      registerTool,
-      exec: vi.fn(),
-      on: vi.fn(),
-      registerCommand: vi.fn(),
-      registerShortcut: vi.fn(),
-      registerFlag: vi.fn(),
-      getFlag: vi.fn(),
-      sendMessage: vi.fn(),
-      sendUserMessage: vi.fn(),
-      appendEntry: vi.fn(),
-      setSessionName: vi.fn(),
-      getSessionName: vi.fn(),
-      setLabel: vi.fn(),
-      getCommands: vi.fn(() => []),
-      registerMessageRenderer: vi.fn(),
-      getActiveTools: vi.fn(() => []),
-      getAllTools: vi.fn(() => []),
-      setActiveTools: vi.fn(),
-      setModel: vi.fn(),
-      getThinkingLevel: vi.fn(),
-      setThinkingLevel: vi.fn(),
-      events: { on: vi.fn(), emit: vi.fn() },
-      registerProvider: vi.fn(),
-      unregisterProvider: vi.fn(),
-    } as never, {
+    extension(pi, {
       env: {
         ZAI_API_KEY: 'test-key',
         ZAI_ENABLED_MODULES: 'search,reader',
       },
     });
 
-    const names = registerTool.mock.calls.map(([tool]) => tool.name);
+    const names = pi.registerTool.mock.calls.map(([tool]: any) => tool.name);
     expect(names).toEqual(['zai_web_search', 'zai_web_reader']);
   });
 
   it('registers vision tools when vision module is enabled', () => {
-    const registerTool = vi.fn();
+    const pi = createMockPi();
 
-    extension({
-      registerTool,
-      exec: vi.fn(),
-      on: vi.fn(),
-      registerCommand: vi.fn(),
-      registerShortcut: vi.fn(),
-      registerFlag: vi.fn(),
-      getFlag: vi.fn(),
-      sendMessage: vi.fn(),
-      sendUserMessage: vi.fn(),
-      appendEntry: vi.fn(),
-      setSessionName: vi.fn(),
-      getSessionName: vi.fn(),
-      setLabel: vi.fn(),
-      getCommands: vi.fn(() => []),
-      registerMessageRenderer: vi.fn(),
-      getActiveTools: vi.fn(() => []),
-      getAllTools: vi.fn(() => []),
-      setActiveTools: vi.fn(),
-      setModel: vi.fn(),
-      getThinkingLevel: vi.fn(),
-      setThinkingLevel: vi.fn(),
-      events: { on: vi.fn(), emit: vi.fn() },
-      registerProvider: vi.fn(),
-      unregisterProvider: vi.fn(),
-    } as never, {
+    extension(pi, {
       env: {
         ZAI_API_KEY: 'test-key',
         ZAI_ENABLED_MODULES: 'vision',
       },
     });
 
-    const names = registerTool.mock.calls.map(([tool]) => tool.name);
+    const names = pi.registerTool.mock.calls.map(([tool]: any) => tool.name);
     expect(names).toEqual([
       'zai_vision_ui_to_artifact',
       'zai_vision_extract_text',
@@ -90,41 +71,16 @@ describe('zai tools extension', () => {
   });
 
   it('registers all tools when all modules are enabled', () => {
-    const registerTool = vi.fn();
+    const pi = createMockPi();
 
-    extension({
-      registerTool,
-      exec: vi.fn(),
-      on: vi.fn(),
-      registerCommand: vi.fn(),
-      registerShortcut: vi.fn(),
-      registerFlag: vi.fn(),
-      getFlag: vi.fn(),
-      sendMessage: vi.fn(),
-      sendUserMessage: vi.fn(),
-      appendEntry: vi.fn(),
-      setSessionName: vi.fn(),
-      getSessionName: vi.fn(),
-      setLabel: vi.fn(),
-      getCommands: vi.fn(() => []),
-      registerMessageRenderer: vi.fn(),
-      getActiveTools: vi.fn(() => []),
-      getAllTools: vi.fn(() => []),
-      setActiveTools: vi.fn(),
-      setModel: vi.fn(),
-      getThinkingLevel: vi.fn(),
-      setThinkingLevel: vi.fn(),
-      events: { on: vi.fn(), emit: vi.fn() },
-      registerProvider: vi.fn(),
-      unregisterProvider: vi.fn(),
-    } as never, {
+    extension(pi, {
       env: {
         ZAI_API_KEY: 'test-key',
         ZAI_ENABLED_MODULES: 'search,reader,zread,vision',
       },
     });
 
-    const names = registerTool.mock.calls.map(([tool]) => tool.name);
+    const names = pi.registerTool.mock.calls.map(([tool]: any) => tool.name);
     expect(names).toEqual([
       'zai_web_search',
       'zai_web_reader',

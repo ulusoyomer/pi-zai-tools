@@ -1,3 +1,4 @@
+import type { AgentToolUpdateCallback } from '@mariozechner/pi-coding-agent';
 import { Type } from '@sinclair/typebox';
 import { formatFileContent } from '../utils/formatting.ts';
 
@@ -10,9 +11,15 @@ export function createZreadReadFileTool(service: { readFile: (repo: string, path
       repo: Type.String({ description: 'Repository in owner/repo format' }),
       path: Type.String({ description: 'File path within the repository' }),
     }),
-    async execute(_toolCallId: string, params: { repo: string; path: string }) {
+    async execute(_toolCallId: string, params: { repo: string; path: string }, _signal: AbortSignal | undefined, onUpdate: AgentToolUpdateCallback<unknown> | undefined) {
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `📄 Zread — reading ${params.repo}/${params.path}` }], details: undefined });
+      }
       const result = await service.readFile(params.repo, params.path);
       const formatted = formatFileContent(result.payload);
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `✅ Zread — file loaded: ${params.path}` }], details: undefined });
+      }
       return {
         content: [{ type: 'text' as const, text: formatted.summary }],
         details: { ...formatted.details, raw: result.raw },

@@ -28,7 +28,12 @@ export function createVisionUiDiffCheckTool(service: {
         actual_image_source: string;
         prompt: string;
       },
+      _signal?: unknown,
+      onUpdate?: (update: { content: Array<{ type: "text"; text: string }>; details: unknown }) => void,
     ) {
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `🔎 Vision — comparing UI screenshots...` }], details: undefined });
+      }
       const result = await service.uiDiffCheck(
         params.expected_image_source,
         params.actual_image_source,
@@ -36,6 +41,9 @@ export function createVisionUiDiffCheckTool(service: {
       );
       const text = extractVisionText(result as import('../types.ts').McpToolResult);
       const truncated = truncateText(text, { maxChars: 12_000, label: 'UI diff check' });
+      if (onUpdate) {
+        onUpdate({ content: [{ type: 'text' as const, text: `✅ Vision — UI comparison complete` }], details: undefined });
+      }
       return {
         content: [{ type: 'text' as const, text: truncated.text }],
         details: { raw: result, truncated: truncated.truncated },

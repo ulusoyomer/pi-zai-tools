@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.3.0
+
+UX improvement release — adds real-time progress feedback to all tools.
+
+### Added
+- `onUpdate` progress callbacks to all 13 tools, showing real-time status in the pi TUI during execution:
+  - **Web Search**: `🔍 Z.AI Web Search — searching: "..."` → `✅ Z.AI Web Search — N result(s) found`
+  - **Web Reader**: `🌐 Z.AI Web Reader — reading: hostname/path` → `✅ Z.AI Web Reader — loaded "title"`
+  - **Zread Search Doc**: `📚 Zread — searching docs in owner/repo: "..."` → `✅ Zread — N doc result(s)`
+  - **Zread Repo Structure**: `📂 Zread — fetching repo structure: owner/repo` → `✅ Zread — structure loaded`
+  - **Zread Read File**: `📄 Zread — reading owner/repo/path` → `✅ Zread — file loaded: path`
+  - **Vision (all 8 tools)**: Tool-specific progress messages (e.g. `🎨 generating code`, `📝 extracting text`, `🔧 diagnosing error`, `📊 analyzing diagram`, `📈 analyzing data visualization`, `🔎 comparing UI screenshots`, `🖼️ analyzing image`, `🎬 analyzing video`)
+- 14 new unit tests for `onUpdate` progress messages (`test/tool-onUpdate.test.ts`)
+
+### Changed
+- Refactored extension test helper to use `createMockPi()` factory for DRY test setup
+- All tool `execute` signatures now accept optional `signal` and `onUpdate` parameters (backward compatible)
+
 ## 0.2.0
 
 Feature release — adds AI-powered image and video analysis via Z.AI Vision MCP.

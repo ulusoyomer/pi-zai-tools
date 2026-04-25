@@ -38,4 +38,59 @@ describe('loadConfig', () => {
       'ZAI_TIMEOUT_MS must be a positive integer',
     );
   });
+
+  describe('searchLocation', () => {
+    it('parses cn location correctly', () => {
+      const config = loadConfig({
+        ZAI_API_KEY: 'test-key',
+        ZAI_SEARCH_LOCATION: 'cn',
+      });
+      expect(config.searchLocation).toBe('cn');
+    });
+
+    it('parses us location correctly', () => {
+      const config = loadConfig({
+        ZAI_API_KEY: 'test-key',
+        ZAI_SEARCH_LOCATION: 'us',
+      });
+      expect(config.searchLocation).toBe('us');
+    });
+
+    it('handles uppercase values', () => {
+      const config = loadConfig({
+        ZAI_API_KEY: 'test-key',
+        ZAI_SEARCH_LOCATION: 'US',
+      });
+      expect(config.searchLocation).toBe('us');
+    });
+
+    it('handles mixed case values', () => {
+      const config = loadConfig({
+        ZAI_API_KEY: 'test-key',
+        ZAI_SEARCH_LOCATION: 'Cn',
+      });
+      expect(config.searchLocation).toBe('cn');
+    });
+
+    it('is undefined when not set', () => {
+      const config = loadConfig({ ZAI_API_KEY: 'test-key' });
+      expect(config.searchLocation).toBeUndefined();
+    });
+
+    it('is undefined for invalid values', () => {
+      const config = loadConfig({
+        ZAI_API_KEY: 'test-key',
+        ZAI_SEARCH_LOCATION: 'invalid',
+      });
+      expect(config.searchLocation).toBeUndefined();
+    });
+
+    it('handles whitespace', () => {
+      const config = loadConfig({
+        ZAI_API_KEY: 'test-key',
+        ZAI_SEARCH_LOCATION: '  us  ',
+      });
+      expect(config.searchLocation).toBe('us');
+    });
+  });
 });

@@ -9,6 +9,7 @@ export interface ZaiConfig {
   baseUrl: string;
   timeoutMs: number;
   enabledModules: EnabledModule[];
+  searchLocation?: 'cn' | 'us';
 }
 
 export interface TextContentItem {

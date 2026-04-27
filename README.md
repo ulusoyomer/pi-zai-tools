@@ -70,6 +70,14 @@ export ZAI_ENABLED_MODULES=search,reader,zread,vision
 
 Defaults to all modules when omitted.
 
+Set search location (affects web search results):
+
+```bash
+export ZAI_SEARCH_LOCATION=us # or 'cn'
+```
+
+Defaults to `us` when omitted. Use `cn` for Chinese search results.
+
 Override timeout and base URL:
 
 ```bash

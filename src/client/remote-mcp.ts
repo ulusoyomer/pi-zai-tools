@@ -2,6 +2,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import type { McpToolResult, ZaiConfig } from '../types.ts';
 import { AuthError, RemoteMcpError } from '../utils/errors.ts';
+import { withRetry } from '../utils/retry.ts';
 
 export interface RemoteMcpClient {
   callTool(toolName: string, args: Record<string, unknown>): Promise<McpToolResult>;
@@ -57,17 +58,22 @@ export function createRemoteMcpClient(config: ZaiConfig, path: string): RemoteMc
 
   return {
     async callTool(toolName, args) {
-      const c = await ensureConnected();
-      try {
-        return (await c.callTool({ name: toolName, arguments: args })) as McpToolResult;
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        // Reset connection on disconnect/reset errors so next call reconnects
-        if (/disconnect|closed|reset|transport/i.test(message)) {
-          resetConnection();
-        }
-        throw new RemoteMcpError(message);
-      }
+      return withRetry(
+        async () => {
+          const c = await ensureConnected();
+          try {
+            return (await c.callTool({ name: toolName, arguments: args })) as McpToolResult;
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            // Reset connection on disconnect/reset errors so next call reconnects
+            if (/disconnect|closed|reset|transport/i.test(message)) {
+              resetConnection();
+            }
+            throw new RemoteMcpError(message);
+          }
+        },
+        { maxAttempts: 2, delayMs: 500 },
+      );
     },
   };
 }

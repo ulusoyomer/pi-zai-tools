@@ -3,6 +3,7 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import type { McpToolResult, ZaiConfig } from '../types.ts';
 import { AuthError, RemoteMcpError } from '../utils/errors.ts';
 import { logger } from '../utils/logger.ts';
+import { createRateTracker } from '../utils/rate-limit.ts';
 import { withRetry } from '../utils/retry.ts';
 
 export interface RemoteMcpClient {
@@ -12,6 +13,7 @@ export interface RemoteMcpClient {
 export function createRemoteMcpClient(config: ZaiConfig, path: string): RemoteMcpClient {
   let client: Client | null = null;
   let transport: StreamableHTTPClientTransport | null = null;
+  const rateTracker = createRateTracker({ maxCalls: 100, windowMs: 60_000 });
 
   async function ensureConnected(): Promise<Client> {
     if (client) return client;
@@ -60,6 +62,7 @@ export function createRemoteMcpClient(config: ZaiConfig, path: string): RemoteMc
 
   return {
     async callTool(toolName, args) {
+      rateTracker.record();
       return withRetry(
         async () => {
           const c = await ensureConnected();

@@ -2,6 +2,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import type { McpCallerWithCleanup, McpToolResult, ZaiConfig } from '../types.ts';
 import { AuthError, RemoteMcpError } from '../utils/errors.ts';
+import { logger } from '../utils/logger.ts';
 
 export function createStdioMcpClient(config: ZaiConfig): McpCallerWithCleanup {
   let client: Client | null = null;
@@ -14,7 +15,7 @@ export function createStdioMcpClient(config: ZaiConfig): McpCallerWithCleanup {
       throw new AuthError();
     }
 
-    client = new Client({ name: 'pi-zai-tools', version: '0.1.0' });
+    client = new Client({ name: 'pi-zai-tools', version: '0.4.0' });
     transport = new StdioClientTransport({
       command: 'npx',
       args: ['-y', '@z_ai/mcp-server'],
@@ -31,6 +32,7 @@ export function createStdioMcpClient(config: ZaiConfig): McpCallerWithCleanup {
 
     try {
       await client.connect(transport);
+      logger.debug('Vision MCP server started');
       return client;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -46,8 +48,11 @@ export function createStdioMcpClient(config: ZaiConfig): McpCallerWithCleanup {
   return {
     async callTool(toolName: string, args: Record<string, unknown>): Promise<McpToolResult> {
       const c = await ensureConnected();
+      logger.debug(`→ ${toolName}`, { args });
       try {
-        return (await c.callTool({ name: toolName, arguments: args })) as McpToolResult;
+        const result = (await c.callTool({ name: toolName, arguments: args })) as McpToolResult;
+        logger.debug(`← ${toolName}`, { contentTypes: result.content?.map((c) => c.type) });
+        return result;
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         throw new RemoteMcpError(message);

@@ -2,6 +2,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import type { McpToolResult, ZaiConfig } from '../types.ts';
 import { AuthError, RemoteMcpError } from '../utils/errors.ts';
+import { logger } from '../utils/logger.ts';
 import { withRetry } from '../utils/retry.ts';
 
 export interface RemoteMcpClient {
@@ -32,6 +33,7 @@ export function createRemoteMcpClient(config: ZaiConfig, path: string): RemoteMc
 
     try {
       await client.connect(transport);
+      logger.debug('Connected to MCP server', { path });
       return client;
     } catch (error) {
       client = null;
@@ -61,8 +63,11 @@ export function createRemoteMcpClient(config: ZaiConfig, path: string): RemoteMc
       return withRetry(
         async () => {
           const c = await ensureConnected();
+          logger.debug(`→ ${toolName}`, { args });
           try {
-            return (await c.callTool({ name: toolName, arguments: args })) as McpToolResult;
+            const result = (await c.callTool({ name: toolName, arguments: args })) as McpToolResult;
+            logger.debug(`← ${toolName}`, { contentTypes: result.content?.map((c) => c.type) });
+            return result;
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             // Reset connection on disconnect/reset errors so next call reconnects

@@ -6,7 +6,7 @@ export function createZreadGetRepoStructureTool(service: { getRepoStructure: (re
   return {
     name: 'zai_zread_get_repo_structure',
     label: 'Z.AI Zread Repo Structure',
-    description: 'Get a public GitHub repository structure using Zread.',
+    description: 'Get a public GitHub repository structure using Zread. Use for: "show me the structure of owner/repo", "list files in...", "what does the repo look like?".',
     parameters: Type.Object({
       repo: Type.String({ description: 'Repository in owner/repo format' }),
     }),

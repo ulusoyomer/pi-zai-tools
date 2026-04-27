@@ -6,7 +6,7 @@ export function createWebReaderTool(service: { read: (url: string) => Promise<{ 
   return {
     name: 'zai_web_reader',
     label: 'Z.AI Web Reader',
-    description: 'Read a web page using the Z.AI Web Reader MCP server.',
+    description: 'Read a web page using the Z.AI Web Reader MCP server. Use for: "read this URL", "fetch this page", "summarize this article", "get the content of...".',
     parameters: Type.Object({
       url: Type.String({ description: 'The URL to read' }),
     }),

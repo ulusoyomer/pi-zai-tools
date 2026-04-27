@@ -6,7 +6,7 @@ export function createWebSearchTool(service: { search: (query: string, count?: n
   return {
     name: 'zai_web_search',
     label: 'Z.AI Web Search',
-    description: 'Search the web using the Z.AI Web Search MCP server.',
+    description: 'Search the web using the Z.AI Web Search MCP server. Use for: "search for...", "find...", "look up...", "what is...", "recent news about...".',
     parameters: Type.Object({
       query: Type.String({ description: 'Search query' }),
       count: Type.Optional(Type.Number({ description: 'Maximum number of results to format', minimum: 1, maximum: 10 })),

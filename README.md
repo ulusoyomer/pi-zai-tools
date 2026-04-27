@@ -70,12 +70,28 @@ export ZAI_ENABLED_MODULES=search,reader,zread,vision
 
 Defaults to all modules when omitted.
 
+Set search location (affects web search results):
+
+```bash
+export ZAI_SEARCH_LOCATION=us # or 'cn'
+```
+
+Defaults to `us` when omitted. Use `cn` for Chinese search results.
+
 Override timeout and base URL:
 
 ```bash
 export ZAI_TIMEOUT_MS=30000
 export ZAI_BASE_URL=https://api.z.ai
 ```
+
+Enable debug logging:
+
+```bash
+export ZAI_DEBUG=true
+```
+
+When enabled, logs MCP request/response details to stderr for troubleshooting.
 
 ## Module mapping
 
@@ -116,6 +132,7 @@ export ZAI_BASE_URL=https://api.z.ai
 ### `zai_web_search`
 - `query: string`
 - `count?: number`
+- `freshness?: 'day' | 'week' | 'month' | 'year'`
 
 ### `zai_web_reader`
 - `url: string`

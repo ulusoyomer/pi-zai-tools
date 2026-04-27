@@ -31,7 +31,7 @@ export default function zaiToolsExtension(pi: ExtensionAPI, options?: ExtensionO
 
   if (config.enabledModules.includes('search')) {
     const client = createRemoteMcpClient(config, MCP_SERVER_PATHS.search);
-    const service = createWebSearchService(client);
+    const service = createWebSearchService(client, { searchLocation: config.searchLocation });
     pi.registerTool(createWebSearchTool(service));
   }
 

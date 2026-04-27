@@ -6,7 +6,7 @@ export function createZreadReadFileTool(service: { readFile: (repo: string, path
   return {
     name: 'zai_zread_read_file',
     label: 'Z.AI Zread Read File',
-    description: 'Read a file from a public GitHub repository using Zread.',
+    description: 'Read a file from a public GitHub repository using Zread. Use for: "read package.json from owner/repo", "show me src/index.ts in...", "get the contents of...".',
     parameters: Type.Object({
       repo: Type.String({ description: 'Repository in owner/repo format' }),
       path: Type.String({ description: 'File path within the repository' }),

@@ -1,5 +1,6 @@
 import { MCP_TOOL_NAMES } from '../constants.ts';
-import type { McpCaller, McpToolResult } from '../types.ts';
+import type { McpCaller } from '../types.ts';
+import { extractPayloadFromResult } from '../utils/json-parse.ts';
 import { validateUrl } from '../utils/validation.ts';
 
 const ARG_SHAPES = [
@@ -23,20 +24,11 @@ async function tryArgumentShapes(client: McpCaller, url: string) {
   for (const shape of ARG_SHAPES) {
     try {
       const raw = await client.callTool(MCP_TOOL_NAMES.webReader, shape(url));
-      return { payload: extractPayload(raw), raw };
+      return { payload: extractPayloadFromResult(raw), raw };
     } catch (error) {
       lastError = error;
     }
   }
 
   throw lastError;
-}
-
-function extractPayload(result: McpToolResult) {
-  if (result.structuredContent && typeof result.structuredContent === 'object') {
-    return result.structuredContent as Record<string, unknown>;
-  }
-
-  const text = result.content?.find((item) => item.type === 'text');
-  return { content: text?.text ?? '' };
 }

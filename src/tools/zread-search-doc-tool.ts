@@ -6,7 +6,7 @@ export function createZreadSearchDocTool(service: { searchDoc: (repo: string, qu
   return {
     name: 'zai_zread_search_doc',
     label: 'Z.AI Zread Search Docs',
-    description: 'Search documentation and repository knowledge for a public GitHub repo using Zread.',
+    description: 'Search documentation and repository knowledge for a public GitHub repo using Zread. Use for: "search docs in owner/repo for...", "find installation steps in...", "how does owner/repo handle...".',
     parameters: Type.Object({
       repo: Type.String({ description: 'Repository in owner/repo format' }),
       query: Type.String({ description: 'Documentation query' }),

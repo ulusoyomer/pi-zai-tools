@@ -86,7 +86,7 @@ describe('extractItemsFromResult', () => {
 
   it('falls back to content items as records', () => {
     const result = {
-      content: [{ title: 'Direct', url: 'https://example.com' }],
+      content: [{ type: 'json' as const, title: 'Direct', url: 'https://example.com' }],
     };
     const items = extractItemsFromResult(result);
     expect(items).toHaveLength(1);

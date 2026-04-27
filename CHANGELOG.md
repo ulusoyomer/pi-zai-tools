@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.4.0
+
+Reliability and performance release — adds connection reuse, retry logic, caching, rate tracking, debug logging, search freshness filter, and richer tool descriptions.
+
+### Added
+- **JSON string parsing** for all MCP result types — `extractItemsFromResult()` and `extractPayloadFromResult()` shared utilities (`src/utils/json-parse.ts`)
+- **Connection reuse** for remote MCP client — lazy-connect pattern, reused across calls with automatic reconnection on disconnect (`src/client/remote-mcp.ts`)
+- **Retry logic** with linear backoff — retries transient errors (timeout, ECONNRESET, etc.) up to 2 attempts with 500ms delay (`src/utils/retry.ts`)
+- **Search freshness filter** — optional `freshness` parameter on `zai_web_search` tool: `day`, `week`, `month`, or `year`
+- **Debug logging** — set `ZAI_DEBUG=true` to log MCP request/response details to stderr (`src/utils/logger.ts`)
+- **Search result caching** — TTL-based cache (60s, 50 entries max) avoids redundant API calls for identical queries (`src/utils/cache.ts`)
+- **Rate limit tracking** — tracks API call count per 60s window, warns at 80% quota via debug logging (`src/utils/rate-limit.ts`)
+- **Richer tool descriptions** — all tools now include example trigger phrases for better agent tool selection
+- **`ZAI_SEARCH_LOCATION`** config — defaults to `us` (international results); set to `cn` for Chinese region results
+- 43 new unit tests (91 total unit + 5 live integration = 96)
+
+### Changed
+- Extracted shared `parseJsonFromText`, `extractItemsFromResult`, `extractPayloadFromResult` utilities — DRY across web-search, web-reader, and zread services
+- Remote MCP client no longer creates a new connection per `callTool()` call — significant latency reduction
+- Tool version strings updated to `0.4.0`
+
+### Fixed
+- Z.AI search API JSON string responses now parsed correctly (double-encoded JSON handling)
+- Default search location changed from `cn` to `us` for non-Chinese users
+
 ## 0.3.0
 
 UX improvement release — adds real-time progress feedback to all tools.

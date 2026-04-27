@@ -3,9 +3,11 @@ import type { McpCaller, ZaiConfig } from '../types.ts';
 import { extractItemsFromResult } from '../utils/json-parse.ts';
 import { assertNonEmptyString } from '../utils/validation.ts';
 
+export type SearchFreshness = 'day' | 'week' | 'month' | 'year';
+
 export function createWebSearchService(client: McpCaller, config?: Pick<ZaiConfig, 'searchLocation'>) {
   return {
-    async search(query: string, count = 5) {
+    async search(query: string, count = 5, freshness?: SearchFreshness) {
       const normalizedQuery = assertNonEmptyString(query, 'query');
       const normalizedCount = Math.min(Math.max(Math.trunc(count), 1), 10);
       const args: Record<string, unknown> = {
@@ -14,6 +16,9 @@ export function createWebSearchService(client: McpCaller, config?: Pick<ZaiConfi
       };
       if (config?.searchLocation) {
         args.location = config.searchLocation;
+      }
+      if (freshness) {
+        args.freshness = freshness;
       }
       const result = await tryToolNames(client, args);
 
